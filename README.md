@@ -29,7 +29,7 @@ But usually you'd initialize with some options
 
 Once ready to go, let's navigate
 
-	routebeer.navigate(); // grabs current window path and checks it against our routes for a match
+	routebeer.navigate(); // checks current window path for route match and runs load
 
 
 **routes** is a little object that stores our defined routes. In this case we've defined a `project` route. The `load` function for that route is run when that particular route is matched. The `unload` function for that route is run when that route is navigated away from. The routes parameter names and values are passed into these functions. *Routebeer uses [path match](https://www.npmjs.org/package/path-match) which is built on top of [Path-to-RegExp](https://github.com/component/path-to-regexp) so you can use any of it's options to define paths.*
@@ -80,13 +80,13 @@ As mentioned up top this routebeer is enjoyed best with something like [pjax](ht
 		routes : {
 			home : {
 				pattern : '/',
-				load    : home.load // let's assume this inits the slideshow and binds events
-				unload  : home.unload // let's assume this unbinds all homepage events
+				load    : home.load, // this inits the slideshow and binds events
+				unload  : home.unload // this unbinds all homepage events
 			},
 			contact : {
 				pattern : '/contact',
-				load    : contact.load // let's assume this inits our contact form
-				unload  : contact.unload // let's assume this deconstructs our contact form
+				load    : contact.load, // this inits our contact form
+				unload  : contact.unload // this deconstructs our contact form
 			}
 		},
 		event : 'pjax:success'
