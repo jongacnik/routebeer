@@ -130,5 +130,6 @@ module.exports = {
   'init'     : init,
   'add'      : add,
   'remove'   : remove,
-  'navigate' : _navigate
+  'navigate' : _navigate,
+  'data' : _data 
 };
