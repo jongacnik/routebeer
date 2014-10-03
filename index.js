@@ -1,3 +1,4 @@
+require('custom-event-polyfill');
 var liteURL = require('lite-url');
 var pattern = require('path-match')();
 var extend  = require('extend');
