@@ -1,5 +1,4 @@
 require('custom-event-polyfill');
-var liteURL = require('lite-url');
 var pattern = require('path-match')();
 var extend  = require('extend');
 
@@ -24,8 +23,7 @@ var options = {
  * - Replaces string root in path (if exists)
  */
 var _getCurrentPath = function(root){
-  var url  = liteURL(window.location.href);
-  var path = url.pathname;
+  var path = location.pathname;
   return (!root) ? path : path.replace(root, '');
 }
 
