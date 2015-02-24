@@ -95,8 +95,12 @@ var _doEvent = function(name, details){
  */
 var init = function(opts) {
   options = extend(true, options, opts);
-  if(options.event)
-    window.addEventListener(options.event, _navigate);
+  if(options.event){
+    window.addEventListener(options.event, function(){
+      if(options.event.indexOf('popstate') > -1 && _data.lastRoute === null) return;
+      else _navigate();
+    });
+  }
 };
 
 /**

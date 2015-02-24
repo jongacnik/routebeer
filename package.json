@@ -1,6 +1,6 @@
 {
   "name": "routebeer",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A little router for the browser for ajaxified sites.",
   "repository": {
     "type": "git",
