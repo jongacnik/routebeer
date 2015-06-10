@@ -1,7 +1,7 @@
 {
   "name": "routebeer",
-  "version": "0.1.6",
-  "description": "A little router for the browser for ajaxified sites.",
+  "version": "0.1.7",
+  "description": "A little load/unload router.",
   "repository": {
     "type": "git",
     "url": "https://github.com/amongiants/routebeer"
@@ -10,6 +10,7 @@
   "dependencies": {
     "custom-event-polyfill": "^0.1.2",
     "extend": "^1.3.0",
+    "is-equal": "^1.2.3",
     "path-match": "^1.2.0"
   },
   "keywords": [

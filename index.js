@@ -1,6 +1,7 @@
 require('custom-event-polyfill');
 var pattern = require('path-match')();
 var extend  = require('extend');
+var isEqual = require('is-equal')
 
 // Data
 var _data = {
@@ -15,7 +16,8 @@ var options = {
   'always'   : function(route) { }, // runs before every route load
   'notFound' : function(route) { }, // runs if route is not found in user defined routes
   'root'     : null,
-  'event'    : null
+  'event'    : null,
+  'ignoreDouble' : false
 }
 
 /**
@@ -48,8 +50,10 @@ var _navigate = function(){
     }
   });
 
-  if(_data.lastRoute)
+  if (_data.lastRoute) {
+    if (options.ignoreDouble && isEqual(_data.lastRoute, _data.currentRoute)) return
     _unload(_data.lastRoute);
+  }
 
   if(typeof options.always === 'function') 
     options.always(_data.currentRoute);
