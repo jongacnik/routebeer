@@ -1,97 +1,71 @@
 # routebeer
 
-A little router for the browser for ajaxified sites. We use it to organize/glue smaller bundles of code we want to load and unload when entering and exiting pages. Best enjoyed with [pjax](https://github.com/thybag/PJAX-Standalone) or [similar](http://weblinc.github.io/jquery.smoothState.js/index.html).
+A simple router for the browser best enjoyed with [pjax](https://github.com/thybag/PJAX-Standalone)
 
-## Install
+**Some API Changes in version 0.1.8**
 
-	npm install routebeer --save
+## Usage
 
-## Usage & Options
-	
-	var routebeer = require('routebeer'); // require
-	routebeer.init(); // init to get things going
+	var routebeer = require('routebeer')
 
-But usually you'd initialize with some options
-
-	routebeer.init({
-		routes   : {
-			project : {
-				pattern : '/work/:project',
-				load    : function(params){ console.log('We on a project page'); },
-				unload  : function(params){ console.log('We out a project page'); }
-			}
+	var router = routebeer({
+		always : function (data) { // run on every navigate
+			console.log(data)
 		},
-		always   : function(route){ console.log('We ran something...'); },
-		notFound : function(route){ console.log('Naw'); },
-		root     : '/some/directory',
-		event    : 'pjax:success'
-	});
+		notFound : function (data) { // run on route not found
+			console.log(data)
+		},
+		root : '/', // define optional base
+		event : 'pjax:success' // run route check on event
+	})
+	.add({ // add a route
+		name : 'project',
+		path : '/projects/:project',
+		load : function (r) { // run when navigating to route
+			console.log(r) // r will contain route data, such as params
+		},
+		unload : function (r) { // run when navigating away from route
+			console.log(r)
+		}
+	})
+	.add({
+		name : 'about',
+		path : '/about',
+		load : function (r) {
+			console.log(r)
+		},
+		unload : function (r) {
+			console.log(r)
+		}
+	})
+	.add({
+		name : 'home',
+		path : '/',
+		load : function (r) {
+			console.log(r)
+		},
+		unload : function (r) {
+			console.log(r)
+		}
+	})
+	.navigate() // init
 
-Once ready to go, let's navigate
+Path definition using [path match](https://www.npmjs.org/package/path-match)
 
-	routebeer.navigate(); // checks current window path for route match and runs load
+### Remove
 
+	router.remove('home') // removes route
 
-**routes** is a little object that stores our defined routes. In this case we've defined a `project` route. The `load` function for that route is run when that particular route is matched. The `unload` function for that route is run when that route is navigated away from. The routes parameter names and values are passed into these functions. *Routebeer uses [path match](https://www.npmjs.org/package/path-match) which is built on top of [Path-to-RegExp](https://github.com/component/path-to-regexp) so you can use any of it's options to define paths.*
-
-**always** runs before every route load. Information about the route is passed in as a param.
-
-**notFound** runs if there is no route that matches current path. Information about the route is passed in as a param.
-
-**root** let's us define our project root that all paths are matched relative to (Basically whatever is placed here is ignored from the beginning of the path when routebeer checks for matches).
-
-**event** is the event to which routebeer is bound. In this case we've bound it to `pjax:success` so routebeer is going to run `navigate()`check for a route match whenever the `pjax:success` event is fired.
-
-
-### Additional Methods
-
-You don't need to define all routes within the init function. Two helpers are included to add and remove routes.
-
-#### add
-
-	routebeer.add({
-		name    : 'home',
-		pattern : '/',
-		load    : function(params){ console.log('load', params); },
-		unload  : function(params){ console.log('unload', params); }
-	});
-	
-#### remove
-
-	routebeer.remove('home');
-	
 ### Events
 
-Routebeer emits `routeLoad` and `routeUnload` events on the window whenever it happens. Data like the route name and params can be found in the event detail. Listen for these events like so:
+	router
+		.on('load', function (r) {
 
-	window.addEventListener('routeLoad',function(event){
-		console.log(event.detail.name, event.detail.params);
-	});
-	
-	window.addEventListener('routeUnload',function(event){
-		console.log(event.detail.name, event.detail.params);
-	});
-	
-### Use Case
+		})
+		.on('unload', function (r) {
 
-As mentioned up top this routebeer is enjoyed best with something like [pjax](https://github.com/thybag/PJAX-Standalone). Let's say you're using pjax to add some ajaxy smoothness to your site rather than full page refreshes. You might need to init a slideshow and bind a few events for the homepage, and then when you enter the contact page, you're gonna want to unbind those homepage events and maybe init a contact form. Doing this is super easy to set up with routebeer:
+		})
 
-	routebeer.init({
-		routes : {
-			home : {
-				pattern : '/',
-				load    : home.load, // this inits the slideshow and binds events
-				unload  : home.unload // this unbinds all homepage events
-			},
-			contact : {
-				pattern : '/contact',
-				load    : contact.load, // this inits our contact form
-				unload  : contact.unload // this deconstructs our contact form
-			}
-		},
-		event : 'pjax:success'
-	});
-		
-Now whenever pjax updates your content, routebeer will grab the current path, check to see if it matches any of your defined routes (home or contact). It's gonna run the unload function of whatever the previous route was (if it exists) for cleanup, and if it finds a match, run the new load function.
+## Bundled Version
 
-It's basically like building and destroying views, but since it's framework agnostic you can organize your stuff however you want.
+If you don't want to mess with a build process you can also include the pre-bundled version found in routebeer.bundled.js in your project which exposes routebeer() globally.
